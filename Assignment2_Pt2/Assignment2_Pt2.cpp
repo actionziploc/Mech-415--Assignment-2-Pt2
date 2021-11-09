@@ -2,10 +2,23 @@
 //
 
 #include <iostream>
+#include <cstring>
+#include <cstdlib>
+#include <Windows.h>
+#include <MMSystem.h>
+#include "Audio.h"
+
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    char file[] = ("beam.wav");
+    Audio A(file);
+
+    A.play();
+    std::cout << "Channel Number: " << A.NumChannels << "\nSample Rate: " << A.SampleRate << "\n";
+
+    system("pause");
+    
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
