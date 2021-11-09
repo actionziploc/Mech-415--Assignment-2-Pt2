@@ -23,10 +23,11 @@ public:
 	~Audio();										//destructor
 
 private:
+
+	int bytes_read(int index, int N_bytes);
+	void get_data();
 	
 };
 
 #endif // !Audio 
 
-int bytes_read(int index, int N_bytes);
-void get_data();

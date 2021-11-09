@@ -8,6 +8,7 @@
 
 using namespace std;
 
+//constructor that opens and stores dynamic memory buffer from binary file
 Audio::Audio(char* file_name)
 {
 	ifstream file = ifstream(file_name, ios::binary | ios::ate);			//open the binary file at the end
@@ -15,22 +16,15 @@ Audio::Audio(char* file_name)
 	file.seekg(0, ios::beg);												//move to the beginning of the file
 
 	p_buffer = new char[N_buffer];											//dynamic memory buffer of N_buffer bytes that stores the binary file
-
-
-	int index = 0;
-	int value = 0;
+	p_data = new char[N_data];
 
 	if (file.read(p_buffer, N_buffer))
 	{
 
-		NumChannels = get_read_data(22, 2);
-		SampleRate = get_read_data(24, 4);
-		N_data = readBytes(40, 4);
-
-		for (int i = 44; i < 44 + N_data; i++)
-		{
-			p_data[0] = p_buffer[i];
-		}
+		NumChannels = bytes_read(22, 2);
+		SampleRate = bytes_read(24, 4);
+		N_data = bytes_read(40, 4);
+		get_data();
 
 	}
 	else
@@ -38,30 +32,43 @@ Audio::Audio(char* file_name)
 		cout << "\nUnable to read file " << file_name << "... try again chief.\n";
 	}
 
-
-	delete[] buffer;
 }
 
-int Bytes_read(int index, int N_bytes)
+//destructor
+Audio::~Audio()
 {
-	
+	delete p_buffer;
+	cout << "\n Audio destructor.\n";
 }
 
-void get_read_data()
+//function to get data for canonical wave from binary file to allocate in dynamic memory buffer
+void Audio::get_data()
 {
 	int index = 0;
-	int value = 0;
-	D.p_data = new char[D.N_data];
 
+	for (int i = 44; i < 44 + N_data; i++)
+	{
+		p_data[index] = p_buffer[i];
+	}
+}
+
+//function that read the number of bytes
+int Audio::bytes_read(int index, int N_bytes)
+{
+	int value = 0;
 
 	for (int i = index + N_bytes - 1; i >= index; i--)
 	{
-		value = (value << 8) + D.p_buffer[i];
+		value = (value << 8) + p_buffer[i];
 	}
+}
 
-	for (int i = 44; i < 44 + D.N_data; i++)
-	{
-		D.p_data[index] = D.p_buffer[i];
-	}
+void Audio::play()
+{
+	PlaySoundA("beam.wav", NULL, SND_ASYNC);
+	Sleep(3000);
+
+	PlaySoundA("laser.wav", NULL, SND_ASYNC);
+	Sleep(3000);
 
 }
