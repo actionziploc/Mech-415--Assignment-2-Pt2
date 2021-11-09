@@ -11,11 +11,12 @@
 
 int main()
 {
-    char file[] = ("beam.wav");
+    char file[] = ("beam_canonical.wav");
     Audio A(file);
 
     A.play();
     std::cout << "Channel Number: " << A.NumChannels << "\nSample Rate: " << A.SampleRate << "\n";
+
 
     system("pause");
     

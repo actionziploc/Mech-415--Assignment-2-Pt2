@@ -13,7 +13,7 @@ public:
 	char* p_buffer = nullptr;						//dynamic memory buffer of N_buffer bytes that stores the binary file
 	char* p_data = nullptr;							//pointer to the audio data in p_buffer
 	int N_buffer;									//number of bytes for the memory buffer
-	int N_data;										//number of bytes for the audio data
+	int N_data;									//number of bytes for the audio data
 	int SampleRate;									//number of samples per second for the audio data(Hz), 4 byte int
 	short int NumChannels;							//number of audio channels (1- mono, 2- stereo), 2 byte int
 

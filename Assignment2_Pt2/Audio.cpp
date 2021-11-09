@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <Windows.h>
 #include <mmsystem.h>
+#pragma comment(lib,"winmm.lib")
 
 using namespace std;
 
@@ -16,11 +17,10 @@ Audio::Audio(char* file_name)
 	file.seekg(0, ios::beg);												//move to the beginning of the file
 
 	p_buffer = new char[N_buffer];											//dynamic memory buffer of N_buffer bytes that stores the binary file
-	p_data = new char[N_data];
 
 	if (file.read(p_buffer, N_buffer))
 	{
-
+		auto* buffer = reinterpret_cast<int*>(p_buffer);
 		NumChannels = bytes_read(22, 2);
 		SampleRate = bytes_read(24, 4);
 		N_data = bytes_read(40, 4);
@@ -44,8 +44,9 @@ Audio::~Audio()
 //function to get data for canonical wave from binary file to allocate in dynamic memory buffer
 void Audio::get_data()
 {
+	p_data = new char[N_data];
 	int index = 0;
-
+	
 	for (int i = 44; i < 44 + N_data; i++)
 	{
 		p_data[index] = p_buffer[i];
@@ -61,14 +62,12 @@ int Audio::bytes_read(int index, int N_bytes)
 	{
 		value = (value << 8) + p_buffer[i];
 	}
+
+	return value;
 }
 
 void Audio::play()
 {
-	PlaySoundA("beam.wav", NULL, SND_ASYNC);
+	PlaySoundA(p_buffer, NULL, SND_MEMORY | SND_ASYNC);
 	Sleep(3000);
-
-	PlaySoundA("laser.wav", NULL, SND_ASYNC);
-	Sleep(3000);
-
 }
